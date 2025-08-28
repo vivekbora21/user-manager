@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Add User{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Add New User</h1>
+    <form id="addForm">
+        <div class="form-group">
+            <label for="fullname">Fullname:</label>
+            <input type="text" id="fullname" name="fullname" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add User</button>
+        <a href="/home" class="btn" style="background: #95a5a6; color: white; margin-left: 1rem;">Cancel</a>
+    </form>
+</div>
+
+<script>
+    document.getElementById("addForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("fullname", document.getElementById("fullname").value);
+        formData.append("email", document.getElementById("email").value);
+        formData.append("password", document.getElementById("password").value);
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/users", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                showMessage("User added successfully!", "success");
+                setTimeout(() => {
+                    window.location.href = "/home";
+                }, 1500);
+            } else {
+                showMessage("Failed to add user. Please try again.", "error");
+            }
+        } catch (err) {
+            console.error("Error adding user:", err);
+            showMessage("Error adding user. Please try again.", "error");
+        }
+    });
+
+    // Show message function
+    function showMessage(message, type) {
+        // Create message element
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `alert alert-${type}`;
+        messageDiv.textContent = message;
+        
+        // Insert at the top of main content
+        const main = document.querySelector('main .container');
+        main.insertBefore(messageDiv, main.firstChild);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => messageDiv.remove(), 500);
+        }, 5000);
+    }
+</script>
+{% endblock %}

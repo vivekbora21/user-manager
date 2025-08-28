@@ -1,0 +1,87 @@
+# FastAPI UserManager Project Overview
+
+## 1. Project Structure
+
+- **main.py**  
+  The main FastAPI application file. Contains all backend logic, API endpoints, authentication, and database interactions.
+
+- **templates/**  
+  Contains Jinja2 HTML templates for rendering web pages:
+  - `base.html`: Base layout for all pages.
+  - `login.html`: Login form.
+  - `signup.html`: Signup form.
+  - `home.html`: Dashboard showing users.
+  - `add.html`: Add user form (AJAX).
+  - `update.html`: Update user form (AJAX).
+
+## 2. Core Features
+
+- **User Authentication**
+  - Uses JWT tokens for authentication.
+  - Passwords are hashed with bcrypt (via passlib).
+  - Legacy plain-text passwords are supported and upgraded on login.
+
+- **User Management**
+  - Signup, login, logout.
+  - Add, update, delete users.
+  - List all users (dashboard).
+  - All user data is stored in a MySQL database (`testdb.users`).
+
+- **API Endpoints**
+  - `/signup`, `/login`, `/logout`: User registration and authentication.
+  - `/home`: Dashboard (requires login).
+  - `/api/users`: CRUD API for users (protected).
+  - `/add`, `/update`: Pages for adding/updating users.
+
+- **Frontend**
+  - Uses Jinja2 for server-side rendering.
+  - AJAX (fetch API) for add/update/delete user operations.
+  - Flash messages for user feedback.
+
+## 3. How It Works
+
+- **Startup**
+  - FastAPI app is created.
+  - Jinja2 templates are loaded from the `templates` directory.
+
+- **Database**
+  - MySQL connection is established for each request using `pymysql`.
+  - All user data is stored in the `users` table.
+
+- **Authentication**
+  - JWT tokens are created on login and stored in an HTTP-only cookie.
+  - `get_current_user` extracts and validates the token from cookies for protected routes.
+
+- **Password Handling**
+  - New passwords are always hashed.
+  - Old plain-text passwords are detected and upgraded to bcrypt on next login.
+
+- **Routes**
+  - `/signup` (GET/POST): Register a new user.
+  - `/login` (GET/POST): Login and set JWT cookie.
+  - `/logout` (POST): Remove JWT cookie.
+  - `/home`: Dashboard, shows user list.
+  - `/add`, `/update`: Render forms for adding/updating users.
+  - `/api/users` (GET/POST): List/add users (AJAX).
+  - `/api/users/{user_id}` (GET/PUT/DELETE): Get/update/delete a user (AJAX).
+
+- **Frontend**
+  - Uses Bootstrap-like styles in `base.html`.
+  - JavaScript fetches user data and handles add/update/delete via AJAX.
+  - Flash messages are shown for feedback.
+
+## 4. Security
+
+- JWT tokens are stored in HTTP-only cookies.
+- Passwords are hashed using bcrypt.
+- All sensitive operations require authentication.
+
+## 5. Customization
+
+- Update database credentials in `main.py` as needed.
+- Add more fields to the user model or templates as required.
+- Extend API endpoints for more features.
+
+---
+
+**This project provides a simple, secure, and modern user management system using FastAPI,

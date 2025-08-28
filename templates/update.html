@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Update User{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Update User</h1>
+    <form id="updateForm">
+        <div class="form-group">
+            <label for="fullname">Fullname:</label>
+            <input type="text" id="fullname" name="fullname" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <div style="position: relative;">
+                <input type="password" id="password" name="password" required 
+                       placeholder="Enter new password" style="padding-right: 40px;">
+                <span id="togglePassword" 
+                      style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+                             cursor: pointer; user-select: none; font-size: 14px; color: #666;">
+                </span>
+            </div>
+            <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                Leave empty to keep current password, or enter a new password
+            </small><br>
+        <button type="submit" class="btn btn-primary">Update User</button>
+        <a href="/home" class="btn" style="background: #95a5a6; color: white; margin-left: 1rem;">Cancel</a>
+    </form>
+</div>
+
+<script>
+    // Get the user ID from the page URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get("id");
+
+    // Load the current user details from backend and fill in the form
+    async function loadUser() {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/users/${userId}`);
+            if (!response.ok) {
+                showMessage("User not found!", "error");
+                return;
+            }
+
+            const user = await response.json();
+
+            // Fill form fields with current user info
+            document.getElementById("fullname").value = user.fullname;
+            document.getElementById("email").value = user.email;
+            document.getElementById("password").value = user.password;
+
+        } catch (err) {
+            console.error("Error loading user:", err);
+            showMessage("Error loading user data. Please try again.", "error");
+        }
+    }
+
+    // When form is submitted → send updated data to backend
+    document.getElementById("updateForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("fullname", document.getElementById("fullname").value);
+        formData.append("email", document.getElementById("email").value);
+        formData.append("password", document.getElementById("password").value);
+
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/users/${userId}`, {
+                method: "PUT",
+                body: formData
+            });
+
+            if (response.ok) {
+                showMessage("User updated successfully!", "success");
+                setTimeout(() => {
+                    window.location.href = "/home";
+                }, 1500);
+            } else {
+                showMessage("Failed to update user. Please try again.", "error");
+            }
+        } catch (err) {
+            console.error("Error updating user:", err);
+            showMessage("Error updating user. Please try again.", "error");
+        }
+    });
+
+    // Show message function
+    function showMessage(message, type) {
+        // Create message element
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `alert alert-${type}`;
+        messageDiv.textContent = message;
+        
+        // Insert at the top of main content
+        const main = document.querySelector('main .container');
+        main.insertBefore(messageDiv, main.firstChild);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => messageDiv.remove(), 500);
+        }, 5000);
+    }
+
+    // Run loadUser() when the page opens
+    window.addEventListener("DOMContentLoaded", loadUser);
+</script>
+{% endblock %}
