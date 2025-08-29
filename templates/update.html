@@ -16,17 +16,12 @@
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
-            <div style="position: relative;">
-                <input type="password" id="password" name="password" required 
-                       placeholder="Enter new password" style="padding-right: 40px;">
-                <span id="togglePassword" 
-                      style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
-                             cursor: pointer; user-select: none; font-size: 14px; color: #666;">
-                </span>
-            </div>
+            <input type="password" id="password" name="password" 
+                placeholder="Enter new password">
             <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
                 Leave empty to keep current password, or enter a new password
             </small><br>
+        </div>
         <button type="submit" class="btn btn-primary">Update User</button>
         <a href="/home" class="btn" style="background: #95a5a6; color: white; margin-left: 1rem;">Cancel</a>
     </form>

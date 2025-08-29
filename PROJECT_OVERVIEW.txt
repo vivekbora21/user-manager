@@ -11,8 +11,8 @@
   - `login.html`: Login form.
   - `signup.html`: Signup form.
   - `home.html`: Dashboard showing users.
-  - `add.html`: Add user form (AJAX).
-  - `update.html`: Update user form (AJAX).
+  - `add.html`: Add user form.
+  - `update.html`: Update user form.
 
 ## 2. Core Features
 
