@@ -188,6 +188,10 @@
         .input {
             width: 80%;
         }
+        .required {
+            color: red;
+            font-weight: bold;
+        }
 
     </style>
 </head>
@@ -198,11 +202,11 @@
                 <a href="/" class="logo">UserManager</a>
                 <ul class="nav-links">
                     {% if request.url.path == '/' or request.url.path == '/signup' %}
-                        <li><a href="/">Login</a></li>
-                        <li><a href="/signup">Sign Up</a></li>
+                        <li><a class="logo" href="/">Login</a></li>
+                        <li><a class="logo" href="/signup">Sign Up</a></li>
                     {% else %}
-                        <li><a href="/home">Dashboard</a></li>
-                        <li><a href="/" onclick="logout()">Logout</a></li>
+                        <li><a class="logo" href="/home">Dashboard</a></li>
+                        <li><a class="logo" href="/" onclick="logout()">Logout</a></li>
                     {% endif %}
                 </ul>
             </nav>

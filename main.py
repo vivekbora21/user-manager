@@ -134,14 +134,6 @@ async def post_login(request: Request, email: str = Form(...), password: str = F
     if not user:
         return render_template("login.html", request, error="Invalid email or password")
 
-    # upgrade legacy password
-    if not user['password'].startswith('$2'):
-        conn = database()
-        with conn.cursor() as cursor:
-            cursor.execute("UPDATE users SET password=%s WHERE email=%s", (get_password_hash(password), email))
-        conn.commit()
-        conn.close()
-
     token = create_access_token(data={"sub": user['email']}, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     response = RedirectResponse("/home", status_code=303)
     response.set_cookie(key="access_token", value=f"Bearer {token}", httponly=True,
